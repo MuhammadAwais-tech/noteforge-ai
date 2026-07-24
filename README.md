@@ -15,7 +15,7 @@ It's built for university students — originally for myself and classmates at P
 
 ## b. Live URL
 
-🔗 **[Add your deployed Vercel URL here after deploying]**
+🔗 **[NoteForge AI — Live App](https://noteforge-ai-six.vercel.app/)**
 
 ## c. Features
 
