@@ -1,0 +1,31 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+  background-color: #faf8f3;
+  color: #14171f;
+}
+
+.font-serif {
+  font-family: "Fraunces", serif;
+}
+
+::selection {
+  background-color: #5b4fff;
+  color: white;
+}
+
+.card {
+  background: white;
+  border: 1px solid #eae6da;
+  border-radius: 18px;
+}
+
+.scrollbar-thin::-webkit-scrollbar {
+  width: 6px;
+}
+.scrollbar-thin::-webkit-scrollbar-thumb {
+  background: #d9d4c6;
+  border-radius: 999px;
+}
