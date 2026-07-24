@@ -66,9 +66,8 @@ export async function POST(request) {
           contents: [{ role: "user", parts: [{ text: userMessage }] }],
           generationConfig: {
             temperature: 0.4,
-            maxOutputTokens: 4096,
+            maxOutputTokens: 8192,
             responseMimeType: "application/json",
-            thinkingConfig: { thinkingBudget: 0 },
           },
         }),
       }
