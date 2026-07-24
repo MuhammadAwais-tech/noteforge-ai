@@ -32,7 +32,7 @@ It's built for university students — originally for myself and classmates at P
 
 **What it does:** A single AI call turns unstructured notes into a strict, structured JSON object — `{ summary, keyTerms[], quiz[] }` — which the UI renders directly into the summary card, glossary grid, and interactive quiz component. The prompt was written specifically for this app, not copied from a generic "summarize this" template: it enforces exact counts (5–8 key terms, exactly 6 quiz questions), a fixed difficulty mix (2 easy / 3 medium / 1 hard), a strict 4-option-single-answer quiz format, and an explicit instruction not to fabricate facts beyond what's in the notes (falling back conservatively to standard textbook knowledge only when the notes are too thin).
 
-**Model used:** `claude-haiku-4-5-20251001` via the Anthropic Messages API — chosen for speed and low cost per generation, since study-kit generation is a short, well-defined structured-output task rather than open-ended reasoning.
+**Model used:** `gemini-2.5-flash` via the Google Gemini API — chosen because it has a genuinely free tier (no credit card, no expiry) that comfortably covers this app's usage, and it's fast enough for a short, well-defined structured-output task like this.
 
 **The exact system prompt** (see `app/api/generate/route.js`):
 
@@ -73,7 +73,7 @@ Rules:
 
 - **Framework:** Next.js 14 (App Router), React 18
 - **Styling:** Tailwind CSS
-- **AI model/provider:** Anthropic Claude API — `claude-haiku-4-5-20251001`
+- **AI model/provider:** Google Gemini API — `gemini-2.5-flash` (free tier)
 - **Storage:** Browser `localStorage` (no external database — kept the app simple and dependency-free for reliability)
 - **Hosting/deployment:** Vercel
 - **Version control:** Git + GitHub
@@ -95,7 +95,7 @@ git clone https://github.com/<your-username>/noteforge-ai.git
 cd noteforge-ai
 npm install
 cp .env.example .env.local
-# then edit .env.local and paste your Anthropic API key
+# then edit .env.local and paste your free Gemini API key
 npm run dev
 ```
 
@@ -107,7 +107,7 @@ Open [http://localhost:3000](http://localhost:3000).
 2. Go to [vercel.com](https://vercel.com), sign in, and click **Add New → Project**.
 3. Import your GitHub repo.
 4. In **Environment Variables**, add:
-   - `ANTHROPIC_API_KEY` = your key from [console.anthropic.com](https://console.anthropic.com/)
+   - `GEMINI_API_KEY` = your free key from [aistudio.google.com/apikey](https://aistudio.google.com/apikey) (no credit card needed)
 5. Click **Deploy**. Vercel will build and give you a public URL — paste it into section (b) above.
 
 No database, no auth setup, no extra config needed — this is intentionally a zero-infrastructure app.

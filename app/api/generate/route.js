@@ -46,30 +46,32 @@ export async function POST(request) {
       );
     }
 
-    const apiKey = process.env.ANTHROPIC_API_KEY;
+    const apiKey = process.env.GEMINI_API_KEY;
     if (!apiKey) {
       return NextResponse.json(
-        { error: "Server is missing ANTHROPIC_API_KEY. Set it in your hosting provider's environment variables." },
+        { error: "Server is missing GEMINI_API_KEY. Set it in your hosting provider's environment variables." },
         { status: 500 }
       );
     }
 
     const userMessage = `Topic/course: ${topic || "Untitled topic"}\n\nRaw notes:\n${notes}`;
 
-    const response = await fetch("https://api.anthropic.com/v1/messages", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "x-api-key": apiKey,
-        "anthropic-version": "2023-06-01",
-      },
-      body: JSON.stringify({
-        model: "claude-haiku-4-5-20251001",
-        max_tokens: 2048,
-        system: SYSTEM_PROMPT,
-        messages: [{ role: "user", content: userMessage }],
-      }),
-    });
+    const response = await fetch(
+      `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${apiKey}`,
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          system_instruction: { parts: [{ text: SYSTEM_PROMPT }] },
+          contents: [{ role: "user", parts: [{ text: userMessage }] }],
+          generationConfig: {
+            temperature: 0.4,
+            maxOutputTokens: 2048,
+            responseMimeType: "application/json",
+          },
+        }),
+      }
+    );
 
     if (!response.ok) {
       const errText = await response.text();
@@ -80,7 +82,8 @@ export async function POST(request) {
     }
 
     const data = await response.json();
-    const rawText = data.content?.map((b) => b.text || "").join("") || "";
+    const rawText =
+      data.candidates?.[0]?.content?.parts?.map((p) => p.text || "").join("") || "";
 
     let parsed;
     try {
