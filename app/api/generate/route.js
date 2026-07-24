@@ -57,7 +57,7 @@ export async function POST(request) {
     const userMessage = `Topic/course: ${topic || "Untitled topic"}\n\nRaw notes:\n${notes}`;
 
     const response = await fetch(
-       `https://generativelanguage.googleapis.com/v1beta/models/gemini-flash-latest:generateContent?key=${apiKey}`,
+      `https://generativelanguage.googleapis.com/v1beta/models/gemini-flash-latest:generateContent?key=${apiKey}`,
       {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -66,8 +66,9 @@ export async function POST(request) {
           contents: [{ role: "user", parts: [{ text: userMessage }] }],
           generationConfig: {
             temperature: 0.4,
-            maxOutputTokens: 2048,
+            maxOutputTokens: 4096,
             responseMimeType: "application/json",
+            thinkingConfig: { thinkingBudget: 0 },
           },
         }),
       }
@@ -84,6 +85,13 @@ export async function POST(request) {
     const data = await response.json();
     const rawText =
       data.candidates?.[0]?.content?.parts?.map((p) => p.text || "").join("") || "";
+
+    if (!rawText) {
+      return NextResponse.json(
+        { error: "The AI didn't return any content. Try shortening your notes or trying again." },
+        { status: 502 }
+      );
+    }
 
     let parsed;
     try {
